@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+</head>
+<body>
+    <h1>Inventario (lista doblemente enlazada)</h1>
+    <label>
+        Código: <input type="text" id="txtCodigo"><br><br>
+    </label>
+
+    <label>
+        Nombre: <input type="text" id="txtNombre"><br><br>
+    </label>
+
+    <label>
+        Cantidad: <input type="text" id="txtCantidad"><br><br>
+    </label>
+
+    <label>
+        Costo: <input type="text" id="txtCosto"><br><br>
+    </label>
+
+    <button type="button" id="btnAdd">Agregar</button>
+    <button type="button" id="btnBuscar">Buscar</button>
+    <button type="button" id="btnEliminar">Eliminar</button>
+    <button type="button" id="btnListar">Listar</button>
+    <button type="button" id="btnListarInverso">Listar inverso</button>
+    <button type="button" id="btnExtraerPrimero">Extraer primero</button>
+    <button type="button" id="btnExtraerUltimo">Extraer último</button>
+    <hr>
+
+    <div id="detalle"></div>
+
+    <script src="producto-4.js"></script>
+    <script src="inventario-4.js"></script>
+    <script>
+        let inventario = new Inventario();
+        let detalle = document.getElementById("detalle");
+
+        const leerCodigo = () => {
+            return document.getElementById("txtCodigo").value.trim();
+        }
+
+        const leerProducto = () => {
+            let codigo = leerCodigo();
+            let nombre = document.getElementById("txtNombre").value;
+            let cantidad = document.getElementById("txtCantidad").value;
+            let costo = document.getElementById("txtCosto").value;
+            return new Producto(codigo, nombre, cantidad, costo);
+        }
+
+        const btnAdd = document.getElementById("btnAdd");
+        btnAdd.addEventListener("click", () => {
+            let producto = leerProducto();
+            if (producto.codigo == "") {
+                detalle.innerHTML += "<h3>Escribe un código</h3>";
+                return;
+            }
+            if (inventario.agregar(producto)) {
+                detalle.innerHTML += "<h3>Se agregó</h3>" + producto.infoHtml();
+            } else {
+                detalle.innerHTML += "<h3>Ya existe un producto con el código " + producto.codigo + "</h3>";
+            }
+        })
+
+        const btnBuscar = document.getElementById("btnBuscar");
+        btnBuscar.addEventListener("click", () => {
+            let res = inventario.buscar(leerCodigo());
+            if (res == null) {
+                detalle.innerHTML += "<h3>No existe</h3>";
+            } else {
+                detalle.innerHTML += "<h3>Se encontró</h3>" + res.infoHtml();
+            }
+        })
+
+        const btnEliminar = document.getElementById("btnEliminar");
+        btnEliminar.addEventListener("click", () => {
+            let res = inventario.eliminar(leerCodigo());
+            if (res == null) {
+                detalle.innerHTML += "<h3>No existe</h3>";
+            } else {
+                detalle.innerHTML += "<h3>Se eliminó</h3>" + res.infoHtml();
+            }
+        })
+
+        const btnListar = document.getElementById("btnListar");
+        btnListar.addEventListener("click", () => {
+            detalle.innerHTML += "<h3>Listado</h3>" + inventario.listar();
+        })
+
+        const btnListarInverso = document.getElementById("btnListarInverso");
+        btnListarInverso.addEventListener("click", () => {
+            detalle.innerHTML += "<h3>Listado inverso</h3>" + inventario.listarInverso();
+        })
+
+        const btnExtraerPrimero = document.getElementById("btnExtraerPrimero");
+        btnExtraerPrimero.addEventListener("click", () => {
+            let res = inventario.extraerPrimero();
+            if (res == null) {
+                detalle.innerHTML += "<h3>Inventario vacío</h3>";
+            } else {
+                detalle.innerHTML += "<h3>Se extrajo el primero</h3>" + res.infoHtml();
+            }
+        })
+
+        const btnExtraerUltimo = document.getElementById("btnExtraerUltimo");
+        btnExtraerUltimo.addEventListener("click", () => {
+            let res = inventario.extraerUltimo();
+            if (res == null) {
+                detalle.innerHTML += "<h3>Inventario vacío</h3>";
+            } else {
+                detalle.innerHTML += "<h3>Se extrajo el último</h3>" + res.infoHtml();
+            }
+        })
+    </script>
+</body>
+</html>
